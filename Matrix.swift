@@ -3,13 +3,16 @@ class vector<T> {
 
     subscript(index:Int) -> T {
         get {
-            print ("subscript get", index)
+            //print ("subscript get", index)
             return data[index]
         }
         set(newElm) {
-            print ("subscript, set", index, newElm)
             data.insert(newElm, at: index)
+            //print ("subscript, set", index, newElm)
         }
+    }
+    func dump( ) {
+        print (data)
     }
 }
 
@@ -26,6 +29,11 @@ class matrix<T> : vector<vector<T>> {
             }
         }
     }
+    override func dump() {
+        for i in 0..<data.count {
+            data[i].dump()
+        }
+    }
 }
 
 var vFoo = vector<Any>()
@@ -34,11 +42,12 @@ vFoo[0] = "hello"
 vFoo[1] = "world"
 vFoo[2] = 2
 
-print (vFoo[1])
-
+//print (vFoo[1])
+vFoo.dump()
 
 var mFoo = matrix<Float>(3, 0.0)
 mFoo[0][0] = 1.0
 print(mFoo.data.count)
 
 //print (mFoo[0][0])
+mFoo.dump()
