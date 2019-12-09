@@ -7,8 +7,12 @@ class vector<T> {
             return data[index]
         }
         set(newElm) {
-            data.insert(newElm, at: index)
             //print ("subscript, set", index, newElm)
+            if (index == data.count) {
+                data.insert(newElm, at: index)
+            } else {
+                data[index] = newElm // overwrite existing elements
+            }
         }
     }
     func dump( ) {
@@ -23,7 +27,7 @@ class matrix<T> : vector<vector<T>> {
         super.init()
         for i in 0..<N {
             //data[i] = vector<T>()
-            data.insert(vector<T>(), at: i)
+            data.insert(vector<T>(), at: i) // not sure why the commented line above this should work
             for j in 0..<N {
                 data[i][j] = initVal
             }
@@ -46,8 +50,7 @@ vFoo[2] = 2
 vFoo.dump()
 
 var mFoo = matrix<Float>(3, 0.0)
-mFoo[0][0] = 1.0
+mFoo[0][0] = 1.0; mFoo[1][1] = 1.0; mFoo[2][2] = 1.0
 print(mFoo.data.count)
-
-//print (mFoo[0][0])
+print (mFoo[0][0])
 mFoo.dump()
