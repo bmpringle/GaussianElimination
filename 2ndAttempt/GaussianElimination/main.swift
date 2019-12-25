@@ -9,6 +9,12 @@
 import Foundation
 
 typealias Scalar = Float80
+
+struct WrapperMatrixVector {
+    var matrix: SquareMatrix
+    var vector: Vector
+}
+
 //Gets suffix for num
 class NumToString {
     static func val(_ key: Int) -> String {
@@ -97,6 +103,54 @@ class SquareMatrix {
         for i in 1..<length {
             operationNumberPerTriangle = operationNumberPerTriangle + length-i
         }
+    }
+    
+    static func doTriangleOps(_ Matrix: SquareMatrix, _ vector: Vector) -> WrapperMatrixVector {
+        for i in 1...Matrix.length {
+            if(i<Matrix.length) {
+                for j in i+1...Matrix.length {
+                    let pivotCoords = i
+                    let pivotRow = Matrix.getMatrixRow(pivotCoords)!
+                    var rowToModify = Matrix.getMatrixRow(j)!
+                    
+                    let pivotVectorScalar = vector.getVectorEntry(pivotCoords)
+                    var vectorScalarToModify = vector.getVectorEntry(j)
+                    
+                    let pivot = Matrix.getMatrixEntry(pivotCoords, pivotCoords)
+                    let entryToCancel = Matrix.getMatrixEntry(pivotCoords, j)
+                    let multiple: Scalar = -entryToCancel/pivot
+                    
+                    vectorScalarToModify = vectorScalarToModify+pivotVectorScalar*multiple
+                    for k in 0..<rowToModify.count {
+                        rowToModify[k] = rowToModify[k]+pivotRow[k]*multiple
+                    }
+                    Matrix.changeRow(j, rowToModify)
+                    vector.changeEntry(j, vectorScalarToModify)
+                }
+            }else{
+                
+            }
+        }
+        return WrapperMatrixVector(matrix: Matrix, vector: vector)
+    }
+    
+    static func flipMatrixVector(_ Matrix: SquareMatrix, _ vector: Vector) -> WrapperMatrixVector {
+        let matrixRaw = Matrix.getRawMatrix()
+        let vectorRaw = vector.getRawVector()
+
+        var changedVector = vectorRaw
+        var changedMatrix = matrixRaw
+
+        for i in 0..<Matrix.length {
+            for j in 0..<Matrix.length {
+                changedMatrix[i][j] = matrixRaw[Matrix.length-1-i][Matrix.length-1-j]
+            }
+            changedVector[i] = vectorRaw[Matrix.length-1-i]
+        }
+
+        Matrix.Matrix = changedMatrix
+        vector.vector = changedVector
+        return WrapperMatrixVector(matrix: Matrix, vector: vector)
     }
     
     func getOperationsPerTriangle() -> Int {
@@ -227,26 +281,6 @@ var Matrix = SquareMatrix(len)
 
 var vector = Vector(len)
 
-/*print("Get 1, 2")
-print(Matrix.getMatrixEntry(1, 2))
-
-print("OG Matrix")
-Matrix.printMatrix()
-
-Matrix.changeEntry(2, 2, 6)
-
-print("Matrix with 6 at 2, 2")
-Matrix.printMatrix()
-
-print("Matrix 2nd row")
-print(Matrix.getMatrixRow(2)!)
-
-print("Matrix 1st column")
-print(Matrix.getMatrixColumn(1)!)
-
-print("Number of operations to get bottom-left triangle of 0s")
-print(Matrix.getOperationsPerTriangle())*/
-
 print("Matrix + Vector Before Bottom-Left Operation")
 print("     Matrix:")
 Matrix.printMatrix()
@@ -254,31 +288,9 @@ print("     Vector:")
 vector.printVector()
 
 //Do Bottom-Left Operations
-for i in 1...Matrix.length {
-    if(i<Matrix.length) {
-        for j in i+1...Matrix.length {
-            let pivotCoords = i
-            let pivotRow = Matrix.getMatrixRow(pivotCoords)!
-            var rowToModify = Matrix.getMatrixRow(j)!
-            
-            let pivotVectorScalar = vector.getVectorEntry(pivotCoords)
-            var vectorScalarToModify = vector.getVectorEntry(j)
-            
-            let pivot = Matrix.getMatrixEntry(pivotCoords, pivotCoords)
-            let entryToCancel = Matrix.getMatrixEntry(pivotCoords, j)
-            let multiple: Scalar = -entryToCancel/pivot
-            
-            vectorScalarToModify = vectorScalarToModify+pivotVectorScalar*multiple
-            for k in 0..<rowToModify.count {
-                rowToModify[k] = rowToModify[k]+pivotRow[k]*multiple
-            }
-            Matrix.changeRow(j, rowToModify)
-            vector.changeEntry(j, vectorScalarToModify)
-        }
-    }else{
-        
-    }
-}
+let wrapperBL = SquareMatrix.doTriangleOps(Matrix, vector)
+Matrix = wrapperBL.matrix
+vector = wrapperBL.vector
 
 print("Matrix + Vector After Bottom-Left Operation")
 print("     Matrix:")
@@ -286,65 +298,20 @@ Matrix.printMatrix()
 print("     Vector:")
 vector.printVector()
 
+//Flip Matrix
+let wrapperFlip = SquareMatrix.flipMatrixVector(Matrix, vector)
+Matrix = wrapperFlip.matrix
+vector = wrapperFlip.vector
 
-
-var matrixRaw = Matrix.getRawMatrix()
-var vectorRaw = vector.getRawVector()
-
-var changedMatrix = matrixRaw
-var changedVector = vectorRaw
-
-for i in 0..<Matrix.length {
-    for j in 0..<Matrix.length {
-        changedMatrix[i][j] = matrixRaw[Matrix.length-1-i][Matrix.length-1-j]
-    }
-    changedVector[i] = vectorRaw[Matrix.length-1-i]
-}
-
-Matrix.Matrix = changedMatrix
-vector.vector = changedVector
 //Do Top-Right Operations
-for i in 1...Matrix.length {
-    if(i<Matrix.length) {
-        for j in i+1...Matrix.length {
-            let pivotCoords = i
-            let pivotRow = Matrix.getMatrixRow(pivotCoords)!
-            var rowToModify = Matrix.getMatrixRow(j)!
-            
-            let pivotVectorScalar = vector.getVectorEntry(pivotCoords)
-            var vectorScalarToModify = vector.getVectorEntry(j)
-            
-            let pivot = Matrix.getMatrixEntry(pivotCoords, pivotCoords)
-            let entryToCancel = Matrix.getMatrixEntry(pivotCoords, j)
-            let multiple: Scalar = -entryToCancel/pivot
-            
-            vectorScalarToModify = vectorScalarToModify+pivotVectorScalar*multiple
-            for k in 0..<rowToModify.count {
-                rowToModify[k] = rowToModify[k]+pivotRow[k]*multiple
-            }
-            Matrix.changeRow(j, rowToModify)
-            vector.changeEntry(j, vectorScalarToModify)
-        }
-    }else{
-        
-    }
-}
+let wrapperTR = SquareMatrix.doTriangleOps(Matrix, vector)
+Matrix = wrapperTR.matrix
+vector = wrapperTR.vector
 
-var matrixRawBack = Matrix.getRawMatrix()
-var vectorRawBack = vector.getRawVector()
-
-var changedVectorBack = vectorRawBack
-var changedMatrixBack = matrixRawBack
-
-for i in 0..<Matrix.length {
-    for j in 0..<Matrix.length {
-        changedMatrixBack[i][j] = matrixRawBack[Matrix.length-1-i][Matrix.length-1-j]
-    }
-    changedVectorBack[i] = vectorRawBack[Matrix.length-1-i]
-}
-
-Matrix.Matrix = changedMatrixBack
-vector.vector = changedVectorBack
+//Flip Again
+let wrapperFlip2 = SquareMatrix.flipMatrixVector(Matrix, vector)
+Matrix = wrapperFlip2.matrix
+vector = wrapperFlip2.vector
 
 print("Matrix + Vector After Top-Right Operation")
 print("     Matrix:")
@@ -385,7 +352,3 @@ for i in 0..<Matrix.length {
         break
     }
 }
-
-
-
-
