@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		BCAA9A2823B2894F00DB3E34 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAA9A2723B2894F00DB3E34 /* main.swift */; };
+		BCAA9A3123B3CE9D00DB3E34 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCAA9A3023B3CE9D00DB3E34 /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -24,7 +24,7 @@
 
 /* Begin PBXFileReference section */
 		BCAA9A2423B2894F00DB3E34 /* Gaussian Elimination */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "Gaussian Elimination"; sourceTree = BUILT_PRODUCTS_DIR; };
-		BCAA9A2723B2894F00DB3E34 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		BCAA9A3023B3CE9D00DB3E34 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +57,7 @@
 		BCAA9A2623B2894F00DB3E34 /* GaussianElimination */ = {
 			isa = PBXGroup;
 			children = (
-				BCAA9A2723B2894F00DB3E34 /* main.swift */,
+				BCAA9A3023B3CE9D00DB3E34 /* main.swift */,
 			);
 			path = GaussianElimination;
 			sourceTree = "<group>";
@@ -120,7 +120,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				BCAA9A2823B2894F00DB3E34 /* main.swift in Sources */,
+				BCAA9A3123B3CE9D00DB3E34 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
